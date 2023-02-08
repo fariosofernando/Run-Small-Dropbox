@@ -4,8 +4,8 @@ import 'package:http/http.dart';
 import 'package:path/path.dart' as path;
 import 'package:http_parser/http_parser.dart' as http_parser;
 
-import 'models/endpoints_model.dart';
-import 'models/endpointsv2_model.dart';
+import 'connectors/endpoints_model.dart';
+import 'connectors/endpointsv2_model.dart';
 
 Future<Response> getTemporaryFileLink(Map<String, String>? headers, Object? body) async {
   Future<Response> response = post((EndPoints.getTemporaryFileLink), headers: headers, body: jsonEncode(body));
@@ -32,6 +32,8 @@ Future<Response> deleteFile(Map<String, String>? headers, Object? body) async {
   return await response.then((responseReceived) => responseReceived);
 }
 
+/// Use para obter um novo token quando o em uso for a expirar.
+///
 Future<Response> refreshToken({required refreshToken, required appKey, required secretKey}) async {
   Future<Response> response = post(Uri.parse(Auth(refreshToken: refreshToken, appKey: appKey, secretKey: secretKey).refresh));
   return await response.then((responseReceived) => responseReceived);
