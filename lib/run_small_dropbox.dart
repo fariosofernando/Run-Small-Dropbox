@@ -4,8 +4,8 @@ import 'package:http/http.dart';
 import 'package:path/path.dart' as path;
 import 'package:http_parser/http_parser.dart' as http_parser;
 
-import 'connectors/endpoints_model.dart';
-import 'connectors/endpointsv2_model.dart';
+import 'connectors/parts/urs_part.dart';
+import 'connectors/parts/auth_part.dart';
 
 Future<Response> getTemporaryFileLink(Map<String, String>? headers, Object? body) async {
   Future<Response> response = post((EndPoints.getTemporaryFileLink), headers: headers, body: jsonEncode(body));
