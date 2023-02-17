@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:http_parser/http_parser.dart' as http_parser;
 
@@ -39,27 +41,19 @@ Future<Response> refreshToken({required refreshToken, required appKey, required 
   return await response.then((responseReceived) => responseReceived);
 }
 
-Future<Response> uploadFile(String token, String goUpTo, List<File> invoiceFiles) async {
-  MultipartRequest request = MultipartRequest('POST', EndPoints.uploadFile);
+Future<Response> uploadFile(String token, String goUpTo, File dataFile) async {
+  // MultipartRequest request = MultipartRequest('POST', EndPoints.uploadFile);
 
-  request.headers['Authorization'] = token;
-  request.headers['Dropbox-API-Arg'] = '{"autorename": false,"mode": "add","mute":false,"path": $goUpTo, "strict_conflict": false}';
-  request.headers[HttpHeaders.acceptHeader] = 'application/json';
+  // final file = File('/my/binary/file');
+  Uint8List data = await dataFile.readAsBytes();
 
-  request.files.addAll(
-    invoiceFiles.map(
-      (file) {
-        return MultipartFile.fromBytes(
-          '--data-binary',
-          file.readAsBytesSync(),
-          filename: path.basename(file.path),
-          contentType: http_parser.MediaType('image', path.extension(file.path)),
-        );
-      },
-    ),
-  );
+  Map<String, String> headers = {
+    'Authorization': 'Bearer $token',
+    'Content-type': 'application/octet-stream',
+    'Dropbox-API-Arg': '{"path": $goUpTo, "mode": "overwrite"}',
+  };
 
-  StreamedResponse streamedResponse = await request.send();
-  Future<Response> response = Response.fromStream(streamedResponse);
-  return await response;
+  final response = http.post(EndPoints.uploadFile, body: data, headers: headers);
+
+  return response;
 }

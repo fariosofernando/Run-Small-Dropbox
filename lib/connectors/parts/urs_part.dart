@@ -3,7 +3,7 @@ class EndPoints {
 
   static Uri copyFile = Uri.parse('$_andress/files/copy_v2');
   static Uri createFolder = Uri.parse('$_andress/files/create_folder_v2');
-  static Uri uploadFile = Uri.parse('$_andress/files/upload');
+  static Uri uploadFile = Uri.parse('https://content.dropboxapi.com/2/files/upload'); // bugs
   static Uri deleteFile = Uri.parse('$_andress/files/delete_v2');
   static Uri moveFile = Uri.parse('$_andress/files/move_v2');
   static Uri getTemporaryFileLink = Uri.parse('$_andress/files/get_temporary_link');
