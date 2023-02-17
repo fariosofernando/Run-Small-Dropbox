@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
 
 import 'connectors/parts/urs_part.dart';
 import 'connectors/parts/auth_part.dart';
@@ -43,7 +42,7 @@ Future<Response> refreshToken({required refreshToken, required appKey, required 
 Future<Response> uploadFile(UploadFiles connector, File file) async {
   Uint8List data = await file.readAsBytes();
 
-  final response = await http.post(EndPoints.uploadFile, body: data, headers: connector.headers());
+  final response = await post(EndPoints.uploadFile, body: data, headers: connector.headers());
 
   return response;
 }
