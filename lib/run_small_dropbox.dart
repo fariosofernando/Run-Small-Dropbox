@@ -3,11 +3,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
-import 'package:http_parser/http_parser.dart' as http_parser;
 
 import 'connectors/parts/urs_part.dart';
 import 'connectors/parts/auth_part.dart';
+import 'connectors/parts/parameters_part.dart';
 
 Future<Response> getTemporaryFileLink(Map<String, String>? headers, Object? body) async {
   Future<Response> response = post((EndPoints.getTemporaryFileLink), headers: headers, body: jsonEncode(body));
@@ -41,19 +40,10 @@ Future<Response> refreshToken({required refreshToken, required appKey, required 
   return await response.then((responseReceived) => responseReceived);
 }
 
-Future<Response> uploadFile(String token, String goUpTo, File dataFile) async {
-  // MultipartRequest request = MultipartRequest('POST', EndPoints.uploadFile);
+Future<Response> uploadFile(UploadFiles connector, File file) async {
+  Uint8List data = await file.readAsBytes();
 
-  // final file = File('/my/binary/file');
-  Uint8List data = await dataFile.readAsBytes();
-
-  Map<String, String> headers = {
-    'Authorization': 'Bearer $token',
-    'Content-type': 'application/octet-stream',
-    'Dropbox-API-Arg': '{"path": $goUpTo, "mode": "overwrite"}',
-  };
-
-  final response = http.post(EndPoints.uploadFile, body: data, headers: headers);
+  final response = await http.post(EndPoints.uploadFile, body: data, headers: connector.headers());
 
   return response;
 }

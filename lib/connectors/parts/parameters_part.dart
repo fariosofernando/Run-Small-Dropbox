@@ -1,3 +1,18 @@
+class UploadFiles {
+  final String token;
+  final String goUpTo;
+
+  UploadFiles(this.token, this.goUpTo);
+
+  Map<String, String> headers() {
+    return {
+      'Authorization': 'Bearer $token',
+      'Content-type': 'application/octet-stream',
+      'Dropbox-API-Arg': '{"path":  "$goUpTo", "mode": "overwrite"}',
+    };
+  }
+}
+
 Map<String, String> commonParameter(String token) {
   return {'Authorization': token, 'Content-Type': 'application/json'};
 }
